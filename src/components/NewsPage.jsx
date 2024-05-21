@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
-import './NewsCard.css'; // Make sure to create an appropriate CSS file to style pagination
+import './NewsCard.css'; 
 
 const NewsPage = () => {
   const [articles, setArticles] = useState([]);
@@ -38,7 +38,7 @@ const NewsPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleSearch();
-    }, 500); // debounce search by 500ms
+    }, 500); 
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
