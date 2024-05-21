@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 import './NewsCard.css'; 
+import Header from './Header';
 
 const NewsPage = () => {
   const [articles, setArticles] = useState([]);
@@ -12,6 +13,7 @@ const NewsPage = () => {
   const [filteredArticles, setFilteredArticles] = useState([]);
   const articlesPerPage = 10;
 
+ 
   useEffect(() => {
     const fetchData = async () => {
       dispatchLoading({ type: 'LOADING_START' });
@@ -38,7 +40,7 @@ const NewsPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleSearch();
-    }, 500); 
+    }, 500); // debounce search by 500ms
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
@@ -48,7 +50,7 @@ const NewsPage = () => {
 
   const handleSearch = () => {
     const filtered = articles.filter(article =>
-      article.title.toLowerCase().includes(searchQuery.toLowerCase())
+      article.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredArticles(filtered);
     setPageCount(Math.ceil(filtered.length / articlesPerPage));
@@ -62,47 +64,53 @@ const NewsPage = () => {
   const startIndex = currentPage * articlesPerPage;
   const displayedArticles = filteredArticles.slice(startIndex, startIndex + articlesPerPage);
 
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+  };
+
   return (
     <div className="container">
-      <h1 className="heading">Hacker News Articles</h1>
-      <div className="search-container">
-        <input
-          type="text"
-          className="search-bar"
-          placeholder="Search articles..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        <button className="search-button" onClick={handleSearch}>
-          Search
-        </button>
-      </div>
+      <Header 
+        searchQuery={searchQuery} 
+        handleSearchChange={handleSearchChange} 
+      />
       {isLoading.isLoading && <div className="loading">Loading...</div>}
       {!isLoading.isLoading && (
         <>
+          <div className="article-container">
           <ul className="article-list">
             {displayedArticles.map(article => (
               <li key={article.id} className="article-list-item">
                 <span className="article-title">{article.title}</span>
+                <div className="article-details">
+                  <p>By: {`${article.by} |`}</p>
+                  <p>Type: {`${article.type} |`}</p>
+                  <p>Time: {formatDate(article.time)}</p>
+                </div>
                 <a href={article.url} className="read-more" target="_blank" rel="noopener noreferrer">
-                  Read more
+                  {article.url}
                 </a>
               </li>
             ))}
           </ul>
+          </div>
           <ReactPaginate
             previousLabel={"Previous"}
             nextLabel={"Next"}
             breakLabel={"..."}
             breakClassName={"break-me"}
             pageCount={pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
+            marginPagesDisplayed={0} // Display only one page before and after the current page
+            pageRangeDisplayed={3} // Display only 5 page numbers
             onPageChange={handlePageClick}
             containerClassName={"pagination"}
             subContainerClassName={"pages pagination"}
             activeClassName={"active"}
-          />
+            pageLinkClassName={"page-link"} // Add custom class for page links
+            previousLinkClassName={"page-link"} // Add custom class for previous link
+            nextLinkClassName={"page-link"} // Add custom class for next link
+/>
         </>
       )}
     </div>
@@ -119,4 +127,6 @@ const loadingReducer = (state, action) => {
       return state;
   }
 };
+
+
 export default NewsPage;
