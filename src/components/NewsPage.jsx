@@ -96,7 +96,9 @@ const NewsPage = () => {
         searchQuery={searchQuery} 
         handleSearchChange={handleSearchChange} 
       />
-      {isLoading.isLoading && <div className="loading">Loading...</div>}
+      {isLoading.isLoading && <div class="loading-state">
+  <div class="loading"></div>
+</div>}
       {!isLoading.isLoading && (
         <>
           <div className="article-container">
