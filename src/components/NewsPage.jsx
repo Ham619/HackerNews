@@ -105,8 +105,8 @@ const NewsPage = () => {
               <li key={article.id} className="article-list-item">
                 <span className="article-title">{article.title}</span>
                 <div className="article-details">
-                  <p>By: {`${article.by} |`}</p>
-                  <p>Type: {`${article.type} |`}</p>
+                  <p>By: {`${article.by}`}</p>
+                  <p>Type: {`${article.type}`}</p>
                   <p>Time: {formatDate(article.time)}</p>
                 </div>
                 <a href={article.url} className="read-more" target="_blank" rel="noopener noreferrer">
