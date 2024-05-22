@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
-import './NewsCard.css'; 
+import './NewsCard.css';
 import Header from './Header';
+import click from '../Assets/click.mp3'
 
 const NewsPage = () => {
   const [articles, setArticles] = useState([]);
@@ -13,7 +14,6 @@ const NewsPage = () => {
   const [filteredArticles, setFilteredArticles] = useState([]);
   const articlesPerPage = 10;
 
- 
   useEffect(() => {
     const fetchData = async () => {
       dispatchLoading({ type: 'LOADING_START' });
@@ -69,6 +69,27 @@ const NewsPage = () => {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
   };
 
+  useEffect(() => {
+    const hoverSound = new Audio(click);
+
+    const playSound = () => {
+      hoverSound.currentTime = 0; // Reset sound to start
+      hoverSound.play();
+    };
+
+    const items = document.querySelectorAll('.article-list-item');
+
+    items.forEach(item => {
+      item.addEventListener('mouseenter', playSound);
+    });
+
+    return () => {
+      items.forEach(item => {
+        item.removeEventListener('mouseover', playSound);
+      });
+    };
+  }, [displayedArticles]);
+
   return (
     <div className="container">
       <Header 
@@ -102,7 +123,7 @@ const NewsPage = () => {
             breakClassName={"break-me"}
             pageCount={pageCount}
             marginPagesDisplayed={0} // Display only one page before and after the current page
-            pageRangeDisplayed={3} // Display only 5 page numbers
+            pageRangeDisplayed={3} // Display only 3 page numbers
             onPageChange={handlePageClick}
             containerClassName={"pagination"}
             subContainerClassName={"pages pagination"}
@@ -110,7 +131,7 @@ const NewsPage = () => {
             pageLinkClassName={"page-link"} // Add custom class for page links
             previousLinkClassName={"page-link"} // Add custom class for previous link
             nextLinkClassName={"page-link"} // Add custom class for next link
-/>
+          />
         </>
       )}
     </div>
@@ -127,6 +148,5 @@ const loadingReducer = (state, action) => {
       return state;
   }
 };
-
 
 export default NewsPage;

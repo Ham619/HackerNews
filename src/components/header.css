@@ -23,11 +23,12 @@
 
 .header-title {
     display: block;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 100;
 }
 
 .SearchHeader_label {
+    font-family: Verdana, Geneva, sans-serif;
     color: #000;
     font-size: 18px;
     line-height: 1;
